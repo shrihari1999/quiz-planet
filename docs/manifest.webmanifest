@@ -1,0 +1,18 @@
+{
+  "name": "Quiz Planet",
+  "short_name": "Quiz Planet",
+  "description": "Multiplayer trivia for up to 5 players. Pick a category, race the clock, climb the leaderboard.",
+  "start_url": "/quiz-planet/",
+  "scope": "/quiz-planet/",
+  "display": "standalone",
+  "background_color": "#0a0520",
+  "theme_color": "#1a0f3a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

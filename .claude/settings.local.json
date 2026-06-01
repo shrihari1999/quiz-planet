@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:opentdb.com)",
+      "WebFetch(domain:the-trivia-api.com)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(ls /home/shrihari/Documents/Github/chinese-checkers/ 2>&1 | head -50)",
+      "Read(//home/shrihari/Documents/Github/chinese-checkers/**)",
+      "WebFetch(domain:ably.com)"
+    ]
+  }
+}
