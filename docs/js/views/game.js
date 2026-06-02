@@ -90,7 +90,7 @@ function renderQuestion(q) {
 function renderRevealCountdown() {
   const div = document.createElement("div");
   div.className = "reveal-countdown";
-  div.innerHTML = `<div class="reveal-number" id="revealNumber">3</div>`;
+  div.innerHTML = `<div class="reveal-number" id="revealNumber">${Math.ceil(REVEAL_DELAY_MS / 1000)}</div>`;
   return div;
 }
 

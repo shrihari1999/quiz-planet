@@ -266,8 +266,9 @@ async function hostNextQuestion(idx) {
   }
   const q = state.questions[idx];
   if (!q) return;
-  const optionsRevealAt = Date.now() + REVEAL_DELAY_MS;
-  await lobbyCh.publish("question", { qIndex: idx, question: q, optionsRevealAt });
+  // Note: no absolute timestamp is sent — each client anchors the reveal
+  // countdown to its own clock on receipt to avoid cross-device clock skew.
+  await lobbyCh.publish("question", { qIndex: idx, question: q });
   // After answer window, reveal
   const totalMs = REVEAL_DELAY_MS + ANSWER_WINDOW_MS;
   hostTimers.push(setTimeout(() => hostRevealQuestion(), totalMs));
@@ -348,11 +349,15 @@ async function wireGuestHandlers() {
   cleanupFns.push(() => lobbyCh.unsubscribe("game-start", onGameStart));
 
   const onQuestion = (msg) => {
-    const { qIndex, question, optionsRevealAt } = msg.data;
+    const { qIndex, question } = msg.data;
+    // Anchor the reveal countdown to this device's own clock. Using the
+    // host's absolute timestamp would surface clock skew between devices
+    // (e.g. a phone's clock running behind the host would show 5 instead of 3).
+    const questionStartAt = Date.now() + REVEAL_DELAY_MS;
     setState({
       questionIndex: qIndex,
       currentQuestion: question,
-      questionStartAt: optionsRevealAt,
+      questionStartAt,
       questionPhase: "reveal",
       answers: {},
       view: "game",
@@ -361,7 +366,7 @@ async function wireGuestHandlers() {
       if (state.questionIndex === qIndex) {
         setState({ questionPhase: "answering" });
       }
-    }, Math.max(0, optionsRevealAt - Date.now()));
+    }, REVEAL_DELAY_MS);
   };
   lobbyCh.subscribe("question", onQuestion);
   cleanupFns.push(() => lobbyCh.unsubscribe("question", onQuestion));
